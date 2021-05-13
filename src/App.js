@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import "./App.css";
 import Note from "./Note";
 import axios from "axios";
+import noteService from "./services/notes";
 
 const App = (props) => {
   //console.log(props);
@@ -12,7 +13,8 @@ const App = (props) => {
 
   useEffect(() => {
     console.log("effect");
-    axios.get("http://localhost:3001/notes").then((response) => {
+    // axios.get("http://localhost:3001/notes").then((response) => {
+    noteService.getAll().then((response) => {
       console.log("promise fufilled");
       console.log(response);
       setNotes(response.data);
