@@ -47,6 +47,18 @@ const App = (props) => {
     ? notes
     : notes.filter((note) => note.important === true);
 
+  const toggleImportanceOf = (id) => {
+    console.log("Note", id, "needs to be toggled.");
+    const url = `http://localhost:3001/notes/${id}`;
+    const note = notes.find((i) => i.id == id);
+    const changedNote = { ...note, important: !note.important };
+    axios.put(url, changedNote).then((response) => {
+      console.log("promise fulfilled");
+      console.log(response);
+      setNotes(notes.map((note) => (note.id != id ? note : response.data)));
+    });
+  };
+
   return (
     <div className="App">
       <header className="App-header">Notes Header</header>
@@ -57,7 +69,11 @@ const App = (props) => {
 
       <ul>
         {notesToShow.map((note) => (
-          <Note key={note.id} note={note}></Note>
+          <Note
+            key={note.id}
+            note={note}
+            toggleImportanceOf={() => toggleImportanceOf(note.id)}
+          ></Note>
         ))}
       </ul>
 
