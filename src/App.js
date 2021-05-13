@@ -54,11 +54,17 @@ const App = (props) => {
     const url = `http://localhost:3001/notes/${id}`;
     const note = notes.find((i) => i.id == id);
     const changedNote = { ...note, important: !note.important };
-    axios.put(url, changedNote).then((response) => {
-      console.log("promise fulfilled");
-      console.log(response);
-      setNotes(notes.map((note) => (note.id != id ? note : response.data)));
-    });
+    axios
+      .put(url, changedNote)
+      .then((response) => {
+        console.log("promise fulfilled");
+        console.log(response);
+        setNotes(notes.map((note) => (note.id != id ? note : response.data)));
+      })
+      .catch((error) => {
+        alert(`the note '${note.content}' was already deleted from server`);
+        setNotes(notes.filter((n) => n.id !== id));
+      });
   };
 
   return (
