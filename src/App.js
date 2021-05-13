@@ -7,10 +7,19 @@ const App = (props) => {
   // const { notes } = props;
   const [notes, setNotes] = useState(props.notes);
   const [newNote, setNewNote] = useState("a new note...");
+  const [showAll, setShowAll] = useState(true);
 
   const addNote = (event) => {
     event.preventDefault();
-    console.log("ButtonClicked", event.target);
+    //console.log("ButtonClicked", event.target);
+    const noteObject = {
+      content: newNote,
+      date: new Date().toISOString(),
+      important: Math.random() < 0.5,
+      id: notes.length + 1,
+    };
+    setNotes(notes.concat(noteObject));
+    setNewNote("");
   };
 
   const handleNoteChange = (event) => {
@@ -18,11 +27,20 @@ const App = (props) => {
     setNewNote(event.target.value);
   };
 
+  const notesToShow = showAll
+    ? notes
+    : notes.filter((note) => note.important === true);
+
   return (
     <div className="App">
-      <header className="App-header">Header</header>
+      <header className="App-header">Notes Header</header>
+
+      <button onClick={() => setShowAll(!showAll)}>
+        {showAll ? "Important" : "All"}
+      </button>
+
       <ul>
-        {notes.map((note) => (
+        {notesToShow.map((note) => (
           <Note key={note.id} note={note}></Note>
         ))}
       </ul>
