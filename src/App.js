@@ -1,13 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import Note from "./Note";
+import axios from "axios";
 
 const App = (props) => {
   //console.log(props);
   // const { notes } = props;
-  const [notes, setNotes] = useState(props.notes);
+  const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("a new note...");
   const [showAll, setShowAll] = useState(true);
+
+  useEffect(() => {
+    console.log("effect");
+    axios.get("http://localhost:3001/notes").then((response) => {
+      console.log("promise fufilled");
+      console.log(response);
+      setNotes(response.data);
+    });
+  }, []);
+  console.log("render", notes.length, "notes");
 
   const addNote = (event) => {
     event.preventDefault();
@@ -16,10 +27,15 @@ const App = (props) => {
       content: newNote,
       date: new Date().toISOString(),
       important: Math.random() < 0.5,
-      id: notes.length + 1,
+      //id: notes.length + 1,
     };
-    setNotes(notes.concat(noteObject));
-    setNewNote("");
+
+    axios.post("http://localhost:3001/notes", noteObject).then((response) => {
+      console.log("promise fulfilled");
+      console.log(response);
+      setNotes(notes.concat(response.data));
+      setNewNote("");
+    });
   };
 
   const handleNoteChange = (event) => {
