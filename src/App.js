@@ -32,14 +32,13 @@ const App = (props) => {
       //id: notes.length + 1,
     };
 
-    axios
-      .post("http://localhost:3001/api/notes", noteObject)
-      .then((response) => {
-        console.log("promise fulfilled");
-        console.log(response);
-        setNotes(notes.concat(response.data));
-        setNewNote("");
-      });
+    // axios.post("http://localhost:3001/api/notes", noteObject)
+    noteService.create(noteObject).then((response) => {
+      console.log("promise fulfilled");
+      console.log(response);
+      setNotes(notes.concat(response.data));
+      setNewNote("");
+    });
   };
 
   const handleNoteChange = (event) => {
@@ -53,11 +52,12 @@ const App = (props) => {
 
   const toggleImportanceOf = (id) => {
     console.log("Note", id, "needs to be toggled.");
-    const url = `http://localhost:3001/api/notes/${id}`;
+    //const url = `http://localhost:3001/api/notes/${id}`;
     const note = notes.find((i) => i.id === id);
     const changedNote = { ...note, important: !note.important };
-    axios
-      .put(url, changedNote)
+    // axios.put(url, changedNote)
+    noteService
+      .update(id, changedNote)
       .then((response) => {
         console.log("promise fulfilled");
         console.log(response);
