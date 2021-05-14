@@ -32,12 +32,14 @@ const App = (props) => {
       //id: notes.length + 1,
     };
 
-    axios.post("http://localhost:3001/notes", noteObject).then((response) => {
-      console.log("promise fulfilled");
-      console.log(response);
-      setNotes(notes.concat(response.data));
-      setNewNote("");
-    });
+    axios
+      .post("http://localhost:3001/api/notes", noteObject)
+      .then((response) => {
+        console.log("promise fulfilled");
+        console.log(response);
+        setNotes(notes.concat(response.data));
+        setNewNote("");
+      });
   };
 
   const handleNoteChange = (event) => {
@@ -51,15 +53,15 @@ const App = (props) => {
 
   const toggleImportanceOf = (id) => {
     console.log("Note", id, "needs to be toggled.");
-    const url = `http://localhost:3001/notes/${id}`;
-    const note = notes.find((i) => i.id == id);
+    const url = `http://localhost:3001/api/notes/${id}`;
+    const note = notes.find((i) => i.id === id);
     const changedNote = { ...note, important: !note.important };
     axios
       .put(url, changedNote)
       .then((response) => {
         console.log("promise fulfilled");
         console.log(response);
-        setNotes(notes.map((note) => (note.id != id ? note : response.data)));
+        setNotes(notes.map((note) => (note.id !== id ? note : response.data)));
       })
       .catch((error) => {
         alert(`the note '${note.content}' was already deleted from server`);
